@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      crossorigin
+      src="https://unpkg.com/react@17/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js"
+    ></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style type="text/css">
+      body {
+        font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+      }
+      #board {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        text-align: center;
+        flex-wrap: wrap;
+        width: 500px;
+      }
+      #keyboard {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 600px;
+        margin: 1rem 0.5rem;
+        align-items: center;
+      }
+      .keyboard-key {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        background-color: lightgray;
+        margin: 5px;
+        font-size: 20px;
+        cursor: pointer;
+        flex-direction: row;
+      }
+      .keyboard-key:hover {
+        background-color: whitesmoke;
+      }
+
+      .wordSquares {
+        display: flex;
+        flex-direction: row;
+        width: 400px;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .letter {
+        width: 50px;
+        height: 50px;
+        margin: 5px 10px;
+        font-size: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid black;
+      }
+    </style>
+    <title>React Wordle</title>
+  </head>
+
+  <body>
+    <div id="myApp" class="first second"></div>
+    <script type="text/babel">
+      const rows = [];
+      const answer = "MOODY";
+      const guesses = ["MIGHT", "FLOOD", "STRAY", "     ", "     ", "     "];
+
+      function calculateGuessResult(guess, answer) {
+        const result = [];
+        for (let i = 0; i < guess.length; i++) {
+          if (guess[i] === answer[i]) {
+            result.push("green");
+          } else if (answer.includes(guess[i])) {
+            result.push("yellow");
+          } else {
+            result.push("gray");
+          }
+        }
+        return guess.split("").map((letter, letterIndex) => {
+          let color = result[letterIndex];
+          return { letter, color };
+        });
+      }
+
+      const wordleBoard = (
+        <div id="board">
+          {guesses.map((guess, guessIndex) => {
+            const guessResult = calculateGuessResult(guess, answer);
+            return (
+              <div key={guessIndex} className="wordSquares">
+                {guessResult.map((result, letterIndex) => (
+                  <div
+                    key={letterIndex}
+                    className="letter"
+                    style={{ backgroundColor: result.color }}
+                  >
+                    {result.letter}
+                  </div>
+                ))}
+              </div>
+            );
+          })}
+        </div>
+      );
+
+      const alphabet = [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "N",
+        "O",
+        "P",
+        "Q",
+        "R",
+        "S",
+        "T",
+        "U",
+        "V",
+        "W",
+        "X",
+        "Y",
+        "Z",
+      ];
+
+      const keyboardKeys = alphabet.map((letter) => (
+        <div key={letter} className="keyboard-key">
+          {letter}
+        </div>
+      ));
+
+      const keyboard = <div id="keyboard">{keyboardKeys}</div>;
+
+      const board = (
+        <div>
+          {wordleBoard}
+          {keyboard}
+        </div>
+      );
+      ReactDOM.render(board, document.getElementById("myApp"));
+    </script>
+  </body>
+</html>
